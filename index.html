@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex"><title>Arsenal &middot; WorldFirst content database</title>
+<meta name="robots" content="noindex"><title>Contentbase &middot; WorldFirst content database</title>
 <style>
  :root{--ink:#111;--ink2:#444;--ink3:#777;--ink4:#9a9a9a;--line:#e9e9e9;--line2:#f1f1f3;--accent:#b8860b}
  *{box-sizing:border-box}
@@ -35,11 +35,11 @@
 <nav id="nav">
  <a href="#what">What it is</a><a href="#rules">The rules</a><a href="#schema">Schema</a>
  <a href="#call">How to call it</a><a href="#refresh">How to refresh</a>
- <a href="#built">Built on Arsenal</a><a href="#log">Refresh log</a>
+ <a href="#built">Built on Contentbase</a><a href="#log">Refresh log</a>
 </nav>
 <main>
  <div class="eyebrow">WorldFirst &middot; content infrastructure</div>
- <h1>Arsenal</h1>
+ <h1>Contentbase</h1>
  <div class="sub">The neutral database of every piece of owned WorldFirst content. One spine, real scripts, deduped across platforms. Projects plug into it; it never takes sides.</div>
 
  <section id="what"><h2><span class="n">01</span>What it is</h2>
@@ -60,7 +60,7 @@
  </section>
 
  <section id="rules"><h2><span class="n">02</span>The rules</h2>
- <div class="rule"><b>1 &middot; Neutral spine.</b> Arsenal stores facts only: what exists, where it lives, what was said, how it performed. No scores, no verdicts, no opinions. Judgments (Brand Pull, boost picks, audience fits) are <b>lenses</b> — separate JSONs in their own projects that reference assets by <code>asset_id</code>.</div>
+ <div class="rule"><b>1 &middot; Neutral spine.</b> Contentbase stores facts only: what exists, where it lives, what was said, how it performed. No scores, no verdicts, no opinions. Judgments (Brand Pull, boost picks, audience fits) are <b>lenses</b> — separate JSONs in their own projects that reference assets by <code>asset_id</code>.</div>
  <div class="rule"><b>2 &middot; Stable ids.</b> <code>asset_id</code> is assigned once and never changes (YouTube video id for anything on YouTube, IG post id otherwise). Lenses built last month still resolve next year.</div>
  <div class="rule"><b>3 &middot; Scripts are the gold.</b> Every YouTube asset carries its real spoken transcript (pulled from the channel's captions). Cross-posted IG reels inherit it. IG-only posts are caption-only until transcribed — their <code>script_source</code> says so honestly.</div>
  <div class="rule"><b>4 &middot; Refresh adds, never deletes.</b> A refresh appends new content, updates stats, and pairs new cross-posts. Existing pairings and ids are never reshuffled. Content removed from a platform keeps its record (<code>status</code> field for retiring later).</div>
@@ -107,28 +107,28 @@
   <tr><td><code>script</code> / <code>script_source</code></td><td>canonical spoken transcript + where it came from (<code>youtube_asr</code> or honest "none")</td></tr>
   <tr><td><code>youtube</code> / <code>instagram</code></td><td>per-platform record: ids, links, views; IG adds likes/comments/shares/saves/reach</td></tr>
   <tr><td><code>thumb_url</code> / <code>thumb_local</code></td><td>YouTube thumbnails are stable URLs; Instagram ones are saved locally because IG links expire</td></tr>
-  <tr><td><code>first_seen</code> / <code>last_refreshed</code> / <code>status</code></td><td>lifecycle: when it entered Arsenal, when stats last moved, active/retired</td></tr>
+  <tr><td><code>first_seen</code> / <code>last_refreshed</code> / <code>status</code></td><td>lifecycle: when it entered Contentbase, when stats last moved, active/retired</td></tr>
  </table>
  </section>
 
  <section id="call"><h2><span class="n">04</span>How to call it</h2>
- <p>The database is one file: <code>~/Documents/Claude/Arsenal/arsenal.json</code>. Read it directly, or use the helper:</p>
+ <p>The database is one file: <code>~/Documents/Claude/Contentbase/contentbase.json</code>. Read it directly, or use the helper:</p>
  <pre># from the shell
-python3 ~/Documents/Claude/Arsenal/api.py stats
-python3 ~/Documents/Claude/Arsenal/api.py search "1688 supplier" --platform youtube
-python3 ~/Documents/Claude/Arsenal/api.py get eVzw7d4qCEg
-python3 ~/Documents/Claude/Arsenal/api.py newest 10
-python3 ~/Documents/Claude/Arsenal/api.py export /tmp/assets.json   # base for a new lens
+python3 ~/Documents/Claude/Contentbase/api.py stats
+python3 ~/Documents/Claude/Contentbase/api.py search "1688 supplier" --platform youtube
+python3 ~/Documents/Claude/Contentbase/api.py get eVzw7d4qCEg
+python3 ~/Documents/Claude/Contentbase/api.py newest 10
+python3 ~/Documents/Claude/Contentbase/api.py export /tmp/assets.json   # base for a new lens
 
 # from any Python / any Claude session
-import sys; sys.path.insert(0, "/Users/steven/Documents/Claude/Arsenal")
+import sys; sys.path.insert(0, "/Users/steven/Documents/Claude/Contentbase")
 from api import load, search, get, newest</pre>
- <p class="dim">In chat, just say "check the arsenal" / "search the arsenal for X" — any session can run the calls above. Registered in the Pipe Knowledge Index as <code>arsenal</code>, so other verticals discover it automatically.</p>
+ <p class="dim">In chat, just say "check the contentbase" / "search the contentbase for X" — any session can run the calls above. Registered in the Pipe Knowledge Index as <code>contentbase</code>, so other verticals discover it automatically.</p>
  </section>
 
  <section id="refresh"><h2><span class="n">05</span>How to refresh</h2>
- <pre>python3 ~/Documents/Claude/Arsenal/refresh.py          # full refresh
-python3 ~/Documents/Claude/Arsenal/refresh.py --dry    # preview what would change</pre>
+ <pre>python3 ~/Documents/Claude/Contentbase/refresh.py          # full refresh
+python3 ~/Documents/Claude/Contentbase/refresh.py --dry    # preview what would change</pre>
  <p>One command. It walks the live YouTube channel for new uploads (no dependency on any other
  pipeline), pulls their real transcripts, refreshes view counts, ingests new owned Instagram posts from
  the Meta export, pairs new cross-posts, stores thumbnails for new IG posts, and regenerates this page.
@@ -136,13 +136,13 @@ python3 ~/Documents/Claude/Arsenal/refresh.py --dry    # preview what would chan
  <p class="dim">Not on a schedule yet, by choice. When wanted, a two-weekly scheduled task can run the same command — say the word.</p>
  </section>
 
- <section id="built"><h2><span class="n">06</span>Built on Arsenal</h2>
+ <section id="built"><h2><span class="n">06</span>Built on Contentbase</h2>
  <table>
   <tr><th>project</th><th>what it adds</th><th>where</th></tr>
   <tr><td><b>Brand Pull</b></td><td>the awareness lens: scores every asset on pull toward WF's branded product, reasoned over the full script</td><td>socialworldfirst.github.io/brand-pull</td></tr>
   <tr><td class="dim">next candidates</td><td class="dim">content library page (neutral view of this database) &middot; engagement lens &middot; audience-fit lens &middot; regional boost picks done properly</td><td class="dim">—</td></tr>
  </table>
- <p class="dim">Pattern for any new lens: <code>api.py export</code> the assets, judge them in your project, save your lens as its own JSON keyed by <code>asset_id</code>. Never write opinions back into Arsenal.</p>
+ <p class="dim">Pattern for any new lens: <code>api.py export</code> the assets, judge them in your project, save your lens as its own JSON keyed by <code>asset_id</code>. Never write opinions back into Contentbase.</p>
  </section>
 
  <section id="log"><h2><span class="n">07</span>Refresh log</h2>
