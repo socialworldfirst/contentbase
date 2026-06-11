@@ -1,0 +1,165 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>Content Library &middot; WorldFirst content database</title>
+<style>
+ :root{--ink:#111;--ink2:#444;--ink3:#777;--ink4:#9a9a9a;--line:#e9e9e9;--line2:#f1f1f3;--accent:#b8860b}
+ *{box-sizing:border-box}
+ body{margin:0;background:#fff;color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+ .wrap{display:flex;max-width:1080px;margin:0 auto;gap:46px;padding:46px 28px 140px}
+ nav{width:185px;flex:none;position:sticky;top:42px;align-self:flex-start}
+ nav a{display:block;font-size:12.5px;color:var(--ink3);text-decoration:none;padding:4px 0;border-left:2px solid transparent;padding-left:11px}
+ nav a.on{color:var(--ink);border-left-color:var(--ink);font-weight:600}
+ main{flex:1;min-width:0}
+ .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+ h1{font-size:32px;font-weight:690;letter-spacing:-.02em;margin:8px 0 8px}
+ .sub{font-size:15.5px;color:var(--ink2);max-width:600px}
+ section{margin-top:44px;padding-top:8px}
+ h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:650;border-bottom:1px solid var(--line);padding-bottom:9px}
+ h2 .n{color:var(--ink4);margin-right:9px;font-variant-numeric:tabular-nums}
+ p{max-width:640px}
+ .stats{display:flex;gap:30px;flex-wrap:wrap;margin:16px 0 4px}
+ .stat .v{font-size:24px;font-weight:670;font-variant-numeric:tabular-nums}
+ .stat .l{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+ code,pre{font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+ code{background:var(--line2);padding:1px 5px;border-radius:4px}
+ pre{background:#fafafa;border:1px solid var(--line);border-radius:9px;padding:13px 15px;overflow:auto}
+ table{border-collapse:collapse;width:100%;font-size:13px}
+ td,th{text-align:left;padding:7px 12px 7px 0;border-bottom:1px solid var(--line2);vertical-align:top}
+ th{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+ .rule{padding:10px 14px;background:#fafafa;border-left:2px solid var(--accent);border-radius:0 7px 7px 0;margin:10px 0;font-size:14px}
+ .rule b{font-weight:650}
+ ul{padding-left:19px} li{margin:5px 0}
+ .dim{color:var(--ink3);font-size:12.5px}
+</style></head><body>
+<div class="wrap">
+<nav id="nav">
+ <a href="#what">What it is</a><a href="#rules">The rules</a><a href="#schema">Schema</a>
+ <a href="#call">How to call it</a><a href="#refresh">How to refresh</a>
+ <a href="#built">Built on Content Library</a><a href="#log">Refresh log</a>
+</nav>
+<main>
+ <div class="eyebrow">WorldFirst &middot; content infrastructure</div>
+ <h1>Content Library</h1>
+ <div class="sub">The neutral database of every piece of owned WorldFirst content. One spine, real scripts, deduped across platforms. Projects plug into it; it never takes sides.</div>
+
+ <section id="what"><h2><span class="n">01</span>What it is</h2>
+ <div class="stats">
+  <div class="stat"><div class="v">733</div><div class="l">assets</div></div>
+  <div class="stat"><div class="v">92</div><div class="l">cross-posted</div></div>
+  <div class="stat"><div class="v">260</div><div class="l">YouTube only</div></div>
+  <div class="stat"><div class="v">381</div><div class="l">Instagram only</div></div>
+  <div class="stat"><div class="v">327</div><div class="l">with real script</div></div>
+  <div class="stat"><div class="v">2026-06-11</div><div class="l">last updated</div></div>
+ </div>
+ <p>One record per piece of content, no matter how many platforms it was posted to. A YouTube short
+ that was also posted as an IG reel is <b>one asset</b> with both platform records attached and one
+ canonical script. Sources: the public uploads of <b>YouTube @worldfirst</b> (discovered live from the
+ channel, ad-creative unlisted videos excluded by construction) and the owned posts of
+ <b>Instagram @worldfirst</b> (from the Meta Business Suite export).</p>
+ <p>Newest additions: Struggling with cross-border payments to C, Running a global business can be challengi, Meet Caishen Ye, the god of wealth..</p>
+ </section>
+
+ <section id="rules"><h2><span class="n">02</span>The rules</h2>
+ <div class="rule"><b>1 &middot; Neutral spine.</b> Content Library stores facts only: what exists, where it lives, what was said, how it performed. No scores, no verdicts, no opinions. Judgments (Brand Pull, boost picks, audience fits) are <b>lenses</b> — separate JSONs in their own projects that reference assets by <code>asset_id</code>.</div>
+ <div class="rule"><b>2 &middot; Stable ids.</b> <code>asset_id</code> is assigned once and never changes (YouTube video id for anything on YouTube, IG post id otherwise). Lenses built last month still resolve next year.</div>
+ <div class="rule"><b>3 &middot; Scripts are the gold.</b> Every YouTube asset carries its real spoken transcript (pulled from the channel's captions). Cross-posted IG reels inherit it. IG-only posts are caption-only until transcribed — their <code>script_source</code> says so honestly.</div>
+ <div class="rule"><b>4 &middot; Refresh adds, never deletes.</b> A refresh appends new content, updates stats, and pairs new cross-posts. Existing pairings and ids are never reshuffled. Content removed from a platform keeps its record (<code>status</code> field for retiring later).</div>
+ <div class="rule"><b>5 &middot; Raw layers travel with it.</b> Full transcripts (<code>scripts/yt/</code>) and downloaded IG thumbnails (<code>thumbs/ig/</code> — IG links expire, ours don't) live next to the JSON, so the database is self-contained.</div>
+ </section>
+
+ <section id="schema"><h2><span class="n">03</span>Schema (v1)</h2>
+ <p>Top level: <code>name</code>, <code>schema_version</code>, <code>updated_at</code>, <code>sources</code>, <code>counts</code>, <code>assets[]</code>. One asset looks like this:</p>
+ <pre>{
+ &quot;asset_id&quot;: &quot;18084174539628734&quot;,
+ &quot;platforms&quot;: [
+  &quot;instagram&quot;
+ ],
+ &quot;title&quot;: &quot;Going to Canton Fair? don&#x27;t show up without these.&quot;,
+ &quot;script_source&quot;: &quot;none (ig caption only)&quot;,
+ &quot;has_script&quot;: false,
+ &quot;n_words&quot;: 0,
+ &quot;caption&quot;: &quot;Going to Canton Fair? don&#x27;t show up without these.\n\nAfter years walking the halls, here are the 5 things that actually matter:\n\n→ Comfortable shoes (you&#x27;ll do 20,000 steps a day)\n→ Notebook + stapler (for business cards and quotes)\n→ eSIM + WeChat (every supplier follow-up runs on it)\n→ A fast way to pay in CNY (WorldFirst, low FX, same-day)\n→ Electrolytes, not just water\n\nFollow WorldFirst for more sourcing playbooks.&quot;,
+ &quot;duration_sec&quot;: 68,
+ &quot;thumb_url&quot;: &quot;&quot;,
+ &quot;thumb_local&quot;: &quot;thumbs/ig/18084174539628734.jpg&quot;,
+ &quot;youtube&quot;: null,
+ &quot;instagram&quot;: {
+  &quot;id&quot;: &quot;18084174539628734&quot;,
+  &quot;permalink&quot;: &quot;https://www.instagram.com/reel/DZM6g6egcCW/&quot;,
+  &quot;post_type&quot;: &quot;IG reel&quot;,
+  &quot;views&quot;: 538,
+  &quot;likes&quot;: 11,
+  &quot;comments&quot;: 0,
+  &quot;shares&quot;: 0,
+  &quot;saves&quot;: 3,
+  &quot;published&quot;: &quot;2026-06-05&quot;,
+  &quot;reach&quot;: 499,
+  &quot;shortcode&quot;: &quot;DZM6g6egcCW&quot;,
+  &quot;follows&quot;: 1
+ },
+ &quot;views_total&quot;: 538,
+ &quot;first_seen&quot;: &quot;2026-06-10&quot;,
+ &quot;last_refreshed&quot;: &quot;2026-06-11&quot;,
+ &quot;status&quot;: &quot;active&quot;,
+ &quot;script&quot;: &quot;…&quot;
+}</pre>
+ <table>
+  <tr><th>field</th><th>meaning</th></tr>
+  <tr><td><code>platforms</code></td><td><code>["youtube"]</code>, <code>["instagram"]</code>, or both = cross-posted</td></tr>
+  <tr><td><code>script</code> / <code>script_source</code></td><td>canonical spoken transcript + where it came from (<code>youtube_asr</code> or honest "none")</td></tr>
+  <tr><td><code>youtube</code> / <code>instagram</code></td><td>per-platform record: ids, links, views; IG adds likes/comments/shares/saves/reach</td></tr>
+  <tr><td><code>thumb_url</code> / <code>thumb_local</code></td><td>YouTube thumbnails are stable URLs; Instagram ones are saved locally because IG links expire</td></tr>
+  <tr><td><code>first_seen</code> / <code>last_refreshed</code> / <code>status</code></td><td>lifecycle: when it entered Content Library, when stats last moved, active/retired</td></tr>
+ </table>
+ </section>
+
+ <section id="call"><h2><span class="n">04</span>How to call it</h2>
+ <p>The database is one file: <code>~/Documents/Claude/Content Library/content_library.json</code>. Read it directly, or use the helper:</p>
+ <pre># from the shell
+python3 ~/Documents/Claude/Content Library/api.py stats
+python3 ~/Documents/Claude/Content Library/api.py search "1688 supplier" --platform youtube
+python3 ~/Documents/Claude/Content Library/api.py get eVzw7d4qCEg
+python3 ~/Documents/Claude/Content Library/api.py newest 10
+python3 ~/Documents/Claude/Content Library/api.py export /tmp/assets.json   # base for a new lens
+
+# from any Python / any Claude session
+import sys; sys.path.insert(0, "/Users/steven/Documents/Claude/Content Library")
+from api import load, search, get, newest</pre>
+ <p class="dim">In chat, just say "check the content library" / "search the library for X" — any session can run the calls above. Registered in the Pipe Knowledge Index as <code>content_library</code>, so other verticals discover it automatically.</p>
+ </section>
+
+ <section id="refresh"><h2><span class="n">05</span>How to refresh</h2>
+ <pre>python3 ~/Documents/Claude/Content Library/refresh.py          # full refresh
+python3 ~/Documents/Claude/Content Library/refresh.py --dry    # preview what would change</pre>
+ <p>One command. It walks the live YouTube channel for new uploads (no dependency on any other
+ pipeline), pulls their real transcripts, refreshes view counts, ingests new owned Instagram posts from
+ the Meta export, pairs new cross-posts, stores thumbnails for new IG posts, and regenerates this page.
+ Instagram freshness rides on the weekly <code>/watched</code> data dump (that's what updates the Meta export).</p>
+ <p class="dim">Not on a schedule yet, by choice. When wanted, a two-weekly scheduled task can run the same command — say the word.</p>
+ </section>
+
+ <section id="built"><h2><span class="n">06</span>Built on Content Library</h2>
+ <table>
+  <tr><th>project</th><th>what it adds</th><th>where</th></tr>
+  <tr><td><b>Brand Pull</b></td><td>the awareness lens: scores every asset on pull toward WF's branded product, reasoned over the full script</td><td>socialworldfirst.github.io/brand-pull</td></tr>
+  <tr><td class="dim">next candidates</td><td class="dim">content library page (neutral view of this database) &middot; engagement lens &middot; audience-fit lens &middot; regional boost picks done properly</td><td class="dim">—</td></tr>
+ </table>
+ <p class="dim">Pattern for any new lens: <code>api.py export</code> the assets, judge them in your project, save your lens as its own JSON keyed by <code>asset_id</code>. Never write opinions back into Content Library.</p>
+ </section>
+
+ <section id="log"><h2><span class="n">07</span>Refresh log</h2>
+ <table><tr><th>date</th><th>action</th><th>assets</th><th>change</th></tr>
+ <tr><td>2026-06-11</td><td>refresh</td><td>733</td><td>+0 yt, +259 ig</td></tr>
+<tr><td>2026-06-10</td><td>refresh</td><td>479</td><td>+1 yt, +0 ig</td></tr>
+<tr><td>2026-06-10</td><td>refresh</td><td>479</td><td>+1 yt, +0 ig</td></tr>
+<tr><td>2026-06-10</td><td>seed</td><td>478</td><td>seeded from Content Intelligence corpus</td></tr>
+ </table>
+ </section>
+</main></div>
+<script>
+const links=[...document.querySelectorAll('nav a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const onScroll=()=>{let i=secs.findIndex(s=>s.getBoundingClientRect().top>90)-1;if(i<-1)i=secs.length-1;if(i<0)i=0;links.forEach((a,j)=>a.classList.toggle('on',j===i));};
+document.addEventListener('scroll',onScroll,{passive:true});onScroll();
+</script>
+</body></html>
